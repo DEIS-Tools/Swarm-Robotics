@@ -261,7 +261,7 @@ void SingleThreadUppaalBot::movementLogic(){
     double oy = sin(a.GetValue());
     double ox = cos(a.GetValue());
     argos::CVector3 Ori(ox,oy,0);
-    argos::CVector3 newOri = nextPoint - tPosReads.Position; // Direct Access to Map
+    argos::CVector3 newOri = nextPoint - Point(tPosReads.Position, pointType::tempCalculation, ""); // Direct Access to Map
     newOri.Normalize();
 
     double per = newOri.GetX()*Ori.GetY() - newOri.GetY()*Ori.GetX() ;
@@ -350,7 +350,7 @@ std::vector<int> SingleThreadUppaalBot::getStationPlan(std::string modelOutput) 
 
         //Needed for the initial creation of station plans.
         int tmpLastLocation;
-        if(lastLocation >= sMap.stationIDs.size() + sMap.endStationIDs.size())
+        if(lastLocation >= sMap.getAmountOfStations())
             tmpLastLocation = sMap.stationIDs.size() + sMap.endStationIDs.size();
         else
             tmpLastLocation = lastLocation;
@@ -425,7 +425,8 @@ void SingleThreadUppaalBot::setWaypointPlan(std::vector<int> waypointPlan){
 }
 
 std::string SingleThreadUppaalBot::runStationModel(){
-    std::string verifyta{"/home/martin/Desktop/uppaalStratego/bin-Linux/verifyta.bin"};
+    std::string verifyta{"~/Desktop/uppaalStratego/bin-Linux/verifyta.bin"};
+//    std::string verifyta{"/home/martin/Desktop/uppaalStratego/bin-Linux/verifyta.bin"};
     //std::string verifyta{"~/phd/Uppaal/uppaal64-4.1.20-stratego-7/bin-Linux/verifyta"};
     std::string model{"./station_model.xml"};
 
@@ -447,7 +448,8 @@ std::string SingleThreadUppaalBot::runStationModel(){
 }
 
 std::string SingleThreadUppaalBot::runWaypointModel(){
-    std::string verifyta{"/home/martin/Desktop/uppaalStratego/bin-Linux/verifyta.bin"};
+    std::string verifyta{"~/Desktop/uppaalStratego/bin-Linux/verifyta.bin"};
+    //std::string verifyta{"/home/martin/Desktop/uppaalStratego/bin-Linux/verifyta.bin"};
     std::string model{"./waypoint_model.xml"};
 
     std::string terminalCommand = verifyta + " " + model;
@@ -564,7 +566,8 @@ void SingleThreadUppaalBot::constructStationUppaalModel(){
     std::string line;
     int numOfStations;
     std::string matrix;
-    if(lastLocation >= sMap.stationIDs.size() + sMap.endStationIDs.size()){
+
+    if(lastLocation >= sMap.getAmountOfStations()){
         matrix = get_expanded_distance_matrix(sMap, lastLocation);
         numOfStations = sMap.stationIDs.size() + sMap.endStationIDs.size() + 1;
     }
@@ -587,9 +590,10 @@ void SingleThreadUppaalBot::constructStationUppaalModel(){
         if(pos != std::string::npos){
             //@todo: Make proper functions to encapsulate the number written!
             // The id matches the last index of the expanded DistMatrix.
-            if(lastLocation >= sMap.stationIDs.size() + sMap.endStationIDs.size()){
+
+            if(lastLocation >= sMap.getAmountOfStations()){
                 line.replace(pos, std::string{"#CUR_STATION#"}.size(),
-                             std::to_string(sMap.stationIDs.size() + sMap.endStationIDs.size()));
+                             std::to_string(sMap.getAmountOfStations()));
             }
             else
                 line.replace(pos, std::string{"#CUR_STATION#"}.size(),
