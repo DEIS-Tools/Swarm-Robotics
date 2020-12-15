@@ -8,12 +8,10 @@
 #include <sys/types.h>
 
 
-enum pointType {
-    via, endpoint, station, realCorner, cStation, tempCalculation
-};
+enum pointType { via, endpoint, station, realCorner, cStation };
 
 class Point : public argos::CVector3 {
-    unsigned int id{};
+    unsigned int id;
     pointType pType;
     static unsigned int id_counter;
     std::vector<int> adjIDs;
@@ -23,44 +21,22 @@ class Point : public argos::CVector3 {
 
 public:
     Point(float x, float y, float z, pointType type, std::string name);
-
-    Point(float x, float y, float z);
-
     Point(CVector3 c, pointType type, std::string name);
-
     ~Point();
-
-    Point(Point &&p) noexcept;
-
-    Point(const Point &obj);
-
+    Point(Point && p);
+    Point& operator=(Point const& obj);
+    Point( const Point &obj);
     Point();
-
-    //Getters
     //returns the type of a point, for more info check enum pointType
-    [[nodiscard]] int getType() const;
-
-    [[nodiscard]] std::string getName() const;
-
-    [[nodiscard]] int getId() const;
-
-    [[nodiscard]] double getX() const;
-
-    [[nodiscard]] double getY() const;
-
-    [[nodiscard]] double getZ() const;
-
-    [[nodiscard]] std::vector<int> getAdjIDs() const;
-
-    [[nodiscard]] bool isOccupied() const;
-    //End of Getters
-
-    //Setters
-    void setAdjIDs(const std::vector<int> &adjID);
-
+    int getType() const { return pType; }
+    std::string getName() const { return name; }
+    int getId() const { return id; }
+    void setAdjIDs(std::vector<int> adjID);
     void pushAdjID(int adjID);
-
     static void resetIdCount();
+    bool isOccupied(){return occupied;}
+    void setOccupied(bool occupied){this->occupied = occupied;}
+    std::vector<int> getAdjIDs() const { return adjIDs; }
 
     void setAsOccupied(){
         this->occupied = true;
@@ -69,16 +45,19 @@ public:
     void setAsAvailable(){
         this->occupied = false;
     }
-    //Calculations
-    double magnitude() const;
-    //End Calculations
 
-    //Operators
-    Point operator+(const Point &l) const;
+    double getX(){
+        return GetX();
+    }
 
-    Point &operator=(Point const &obj);
+    double getY(){
+        return GetY();
+    }
 
-    Point operator-(const Point &l) const;
+    double getZ(){
+        return GetZ();
+    }
+
 };
 
 #endif

@@ -19,7 +19,6 @@ private:
   std::string id;
   std::vector<Point> corners;
   std::vector<Point> virtualCorners;
-  std::vector<Line> virtualLines;
   std::vector<Line> boxLines;
 
 public:
@@ -31,12 +30,8 @@ public:
   Point &getVCorner(int n) { return virtualCorners[n]; }
   //returns the actual line of the figure
   Line &getBoxLine(int n) { return boxLines[n]; }
-  //build box corners and extends it's virtual corners
+  //build box coners and extends it's virtual corners
   void setBoxCorner();
-  bool isPointInShape(Point& p) const;
-  bool isPointPartOfTheBox(Point& p);
-  Line& getClosestLineToAPoint(const Point &p);
-  std::vector<Line>& getVirtualLines() {return virtualLines;}
   const std::vector<std::tuple<float, float, float, float>> getCoordinates();
 };
 

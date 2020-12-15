@@ -18,8 +18,7 @@ class Map_Structure {
 private:
     // Shortest distance between each point
     std::vector<std::vector<float>> shortestDistanceMatrix{};
-    //amount of endStations and normal stations on the map
-    uint amountOfStations;
+
 public:
     std::string folderPath;
     //storage of elements in the map
@@ -34,7 +33,7 @@ public:
     //shortest paths between each point
     std::vector<std::vector<int>> shortestPath;
 
-    //ensures that the class is created only once
+    //ensurance that the class is created only once
     static Map_Structure &get_instance() {
         static Map_Structure instance;
         return instance;
@@ -44,7 +43,7 @@ public:
     void setFolderPath();
 
     // Get shortest Distances
-    const std::vector<std::vector<float>> &getShortestDistanceMatrix() const {
+    const std::vector<std::vector<float>>& getShortestDistanceMatrix() const {
         return shortestDistanceMatrix;
     };
 
@@ -59,21 +58,15 @@ public:
 
 
     //usage of Floyd-Warshall Algorithm for shortest paths between each via
-    std::vector<std::vector<float>> floydShortestOfStations();
+    std::vector<std::vector<float>> floydShortestOfStations() ;
 
     // function which sets all possible lines between all the points
     void setAllPossibleLines();
 
-    // eliminates a line if it crosses any of the points
-    bool doesLineCrossPoint(Line &line);
-
     // functions eliminates all lines which have intersection with any of the hard lines
     void eliminateBadLines();
 
-    //Helper function for eliminateBadLines
-    bool intersectWithVirtualLines(Line &line);
-
-    Point &getPointByID(int id);
+    Point& getPointByID(int id);
 
     //finds the shortest path of vias from startId to destinationId
     std::vector<Point> findPath(int startId, int destinationId);
@@ -92,11 +85,8 @@ public:
     void setPointAsOccupied(int id);
     void setPointAsAvailable(int id);
 
-    int getAmountOfStations();
-
 private:
 //private constructor ensuring that only one instance is being created of the class
     Map_Structure() = default;
 };
-
 #endif
